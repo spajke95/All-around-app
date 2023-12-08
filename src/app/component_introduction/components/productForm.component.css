@@ -1,0 +1,11 @@
+div {
+    background-color: lightcoral;
+    }
+:host :hover{
+    /* apply style only if have parent */
+    font-size: 25px;
+}
+:host-context(.angularApp) input{
+    /* apply style only if parent have class specified */
+    background-color: lightgrey;
+}

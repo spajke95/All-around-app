@@ -1,0 +1,100 @@
+<div class="my-2">
+    <label>Tax Rate:</label>
+    <select class="form-select" [value]="taxRate || 0"
+    (change)="taxRate=$any($event).target.value">
+    <option value="0">None</option>
+    <option value="10">{{0.1|percent}}</option>
+    <option value="20">{{0.2|percent}}</option>
+    <option value="50">{{0.5|percent}}</option>
+    <option value="150">{{1.5|percent}}</option>
+    </select>
+    </div>
+    <div class="my-2">
+        <label>Category Filter:</label>
+        <select class="form-select" [(ngModel)]="categoryFilter">
+        <option>Watersports</option>
+        <option>Soccer</option>
+        <option>Chess</option>
+        </select>
+    </div>
+    <div class="bg-info p-2 text-white">
+        <div>Date formatted from object: {{ dateObject | date:"shortDate" }}</div>
+        <div>Date formatted from string: {{ dateString | date:"mediumDate" }}</div>
+        <div>Date formatted from number: {{ dateNumber | date:"longDate" }}</div>
+    </div>
+    <div class="bg-info p-2 text-white">
+        <div>
+        Date formatted from object: {{ dateObject | date:"shortDate":"UTC":"fr-FR" }}
+        </div>
+        <div>
+        Date formatted from string: {{ dateString | date:"mediumDate":"UTC":"fr-FR" }}
+        </div>
+        <div>
+        Date formatted from number: {{ dateNumber | date:"longDate":"UTC":"fr-FR" }}
+        </div>
+    </div>
+    <div class="bg-info p-2 text-white">
+        <div>{{ getProducts() | json }}</div>
+    </div>
+    <div class="form-group my-2">
+        <label>Number of items:</label>
+        <select class="form-select" [value]="itemCount ?? 1"
+        (change)="itemCount=$any($event).target.value">
+        <option *ngFor="let item of getProducts(); let i = index" [value]="i + 1"
+        [selected]="(i + 1) === itemCount">
+        {{i + 1}}
+        </option>
+        </select>
+        </div>
+<table class="table table-sm table-bordered table-striped">
+    <thead class="table-light">
+    <tr><th></th><th>Name</th><th>Category</th><th>Price</th><th></th></tr>
+    </thead>
+    <tbody>
+    <tr *paFor="let item of getProducts()|filter:categoryFilter|slice:0:(itemCount??1); let i = index; let odd = odd;
+    let even = even" [class.table-info]="odd" [class.table-warning]="even"
+    class="align-middle">
+    <td>{{i + 1}}</td>
+    <!-- <td>{{item.name|titlecase}}</td> -->
+    <td>{{item.name|uppercase}}</td>
+    <td>{{item.category|lowercase}}</td>
+    <td>{{item.price|addTax:(taxRate||0)|currency:"USD":"symbol":"2.2-2"}}</td>
+    <!-- <td>{{item.price|number:"3.2-2":"en-US"}}</td> -->
+    <!-- <td>{{item.price|currency:"EUR":"symbol":"2.2-2"}}</td> -->
+    <td class="text-center">
+    <button class="btn btn-danger btn-sm"
+    (click)="deleteProduct(item.id)">
+    Delete
+    </button>
+    </td>
+    </tr>
+    </tbody>
+    </table>
+    <table class="table table-sm table-bordered table-striped">
+        <thead><tr><th>Key</th><th>Value</th></tr></thead>
+        <tbody>
+        <tr *paFor="let item of getProducts() | keyvalue">
+        <td>{{ item.key }}</td>
+        
+        <td>{{ item.value | json }}</td>
+        </tr>
+        </tbody>
+        </table>
+        <table class="table table-sm table-bordered table-striped">
+            <thead><tr><th>Name</th><th>Category</th><th>Message</th></tr></thead>
+            <tbody>
+            <tr *paFor="let item of getProducts()">
+            <td>{{ item.name }}</td>
+            <td>{{ item.category }}</td>
+            <td>Helps you {{ item.category | i18nSelect:selectMap }} </td>
+            </tr>
+            </tbody>
+            </table>
+            <div class="bg-info text-white p-2">
+                <div>There are {{ 1 | i18nPlural:numberMap }} </div>
+                <div>There are {{ 2 | i18nPlural:numberMap }} </div>
+                <div>There are {{ 100 | i18nPlural:numberMap }} </div>
+                </div>
+                <div class="bg-info text-white p-2">
+                    <div> Counter: {{ numbers | async|currency:"USD":"symbol":"2.2-2" }} </div>
+                    </div>
